@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface ContentParser {
 
-    default boolean canParse(String content) {
+    default boolean canParse(String line) {
         return false;
     }
 

@@ -10,13 +10,14 @@ import java.util.Optional;
 public class HeaderLineParser implements ContentParser {
 
     @Override
-    public boolean canParse(String content) {
-        return content.startsWith(DslSymbols.HEADER_PREFIX);
+    public boolean canParse(String line) {
+        return DslSymbols.matches(line, DslSymbols.HEADER_SHORT, DslSymbols.HEADER_LONG);
     }
 
     @Override
     public Optional<ParseError> parse(String line, RequestBlock.Builder builder) {
-        var headerLine = line.substring(DslSymbols.HEADER_PREFIX.length()).trim();
+        var headerLine = DslSymbols.stripPrefix(line, DslSymbols.HEADER_SHORT, DslSymbols.HEADER_LONG);
+
         if (headerLine.isEmpty()) {
             return Optional.of(new ParseError(line,
                     "expected: -h <key>=<value>  e.g. -h Content-Type=application/json"));

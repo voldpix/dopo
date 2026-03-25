@@ -5,5 +5,7 @@
 GET https://api.example.com
 
 -h content-type= application/json
+header x-api-key={{token}}
 -q page =1
+query size=0
 

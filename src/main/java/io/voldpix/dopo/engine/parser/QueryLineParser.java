@@ -10,13 +10,13 @@ import java.util.Optional;
 public class QueryLineParser implements ContentParser {
 
     @Override
-    public boolean canParse(String content) {
-        return content.startsWith(DslSymbols.QUERY_PARAM_PREFIX);
+    public boolean canParse(String line) {
+        return DslSymbols.matches(line, DslSymbols.QUERY_SHORT, DslSymbols.QUERY_LONG);
     }
 
     @Override
     public Optional<ParseError> parse(String line, RequestBlock.Builder builder) {
-        var queryString = line.substring(DslSymbols.QUERY_PARAM_PREFIX.length()).trim();
+        var queryString = DslSymbols.stripPrefix(line, DslSymbols.QUERY_SHORT, DslSymbols.QUERY_LONG);
 
         if (queryString.isEmpty()) {
             return Optional.of(new ParseError(line,
