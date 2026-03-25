@@ -1,0 +1,9 @@
+
+
+# request example file
+
+GET https://api.example.com
+
+-h content-type= application/json
+-q page =1
+
