@@ -1,51 +1,66 @@
 package io.voldpix.dopo.engine.parser;
 
+import io.voldpix.dopo.common.exception.ParseException;
 import io.voldpix.dopo.common.model.ParseResult;
+import io.voldpix.dopo.common.model.RawRequest;
 import io.voldpix.dopo.common.model.RequestBlock;
 import io.voldpix.dopo.common.model.parser.ParseError;
-import io.voldpix.dopo.common.utils.ContentCleaner;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class ContentProcessor {
 
-    final ContentCleaner contentCleaner = new ContentCleaner();
+    final RequestExtractor requestExtractor = new RequestExtractor();
     final RequestLineParser requestLineParser = new RequestLineParser();
+    final BodyParser bodyParser = new BodyParser();
 
-    private final List<ContentParser> parsers = List.of(
+    final List<ContentParser> parsers = List.of(
             new HeaderLineParser(),
             new QueryLineParser()
     );
 
     public ParseResult parse(String rawContent) {
-        var lines = contentCleaner.clean(rawContent);
         var errors = new LinkedList<ParseError>();
         var builder = RequestBlock.builder();
 
-        if (lines.isEmpty()) {
+        RawRequest raw;
+        try {
+            raw = requestExtractor.extract(rawContent);
+        } catch (ParseException e) {
+            errors.add(new ParseError("<|...|>", e.getMessage()));
+            return new ParseResult(null, List.copyOf(errors));
+        }
+
+        if (raw.directiveLines().isEmpty()) {
             errors.add(new ParseError("empty file", "file must contain a request"));
             return new ParseResult(null, List.copyOf(errors));
         }
 
-        var firstLine = lines.getFirst();
+        var firstLine = raw.directiveLines().getFirst();
         if (!requestLineParser.canParse(firstLine)) {
             errors.add(new ParseError(firstLine,
                     "file must start with a request line e.g. GET https://api.example.com"));
             return new ParseResult(null, List.copyOf(errors));
         }
+        requestLineParser.parse(firstLine, builder).ifPresent(errors::add);
 
-        requestLineParser.parse(firstLine, builder);
-
-        for (var line : lines.subList(1, lines.size())) {
+        for (var line : raw.directiveLines().subList(1, raw.directiveLines().size())) {
             parsers.stream()
                     .filter(p -> p.canParse(line))
                     .findFirst()
                     .ifPresentOrElse(
                             p -> p.parse(line, builder).ifPresent(errors::add),
-                            () -> errors.add(new ParseError(line, "unrecognized line: \"" + line + "\""))
+                            () -> errors.add(new ParseError(line,
+                                    "unrecognized directive: \"" + line + "\""))
                     );
         }
-        return new ParseResult(builder.build(), List.copyOf(errors));
+
+        bodyParser.parse(raw.body(), builder).ifPresent(errors::add);
+
+        return new ParseResult(
+                errors.isEmpty() ? builder.build() : null,
+                List.copyOf(errors)
+        );
     }
 }

@@ -2,16 +2,22 @@ package io.voldpix.dopo.common.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public record RequestBlock(
         HttpMethod method,
         String url,
         List<Header> headers,
-        List<QueryParam> queryParams
+        List<QueryParam> queryParams,
+        String body
 ) {
 
     public static Builder builder() {
         return new Builder();
+    }
+
+    public boolean hasBody() {
+        return Objects.nonNull(body) && !body.isBlank();
     }
 
     public static class Builder {
@@ -19,6 +25,7 @@ public record RequestBlock(
         private String url;
         private List<Header> headers = new ArrayList<>();
         private List<QueryParam> queryParams = new ArrayList<>();
+        private String body;
 
         public Builder method(HttpMethod method) {
             this.method = method;
@@ -45,12 +52,18 @@ public record RequestBlock(
             return this;
         }
 
+        public Builder body(String body) {
+            this.body = body;
+            return this;
+        }
+
         public RequestBlock build() {
             return new RequestBlock(
                     method,
                     url,
                     headers,
-                    queryParams
+                    queryParams,
+                    body
             );
         }
     }

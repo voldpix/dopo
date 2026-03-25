@@ -13,6 +13,8 @@ public final class DslSymbols {
     public static final String QUERY_SHORT = "-q";
     public static final String QUERY_LONG = "query";
 
+    public static final String BODY_OPEN = "<|";
+    public static final String BODY_CLOSE = "|>";
 
     public static boolean matches(String line, String shortForm, String longForm) {
         return line.startsWith(shortForm) || line.startsWith(longForm);
