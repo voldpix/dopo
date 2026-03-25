@@ -17,7 +17,7 @@ public final class DslSymbols {
     public static final String BODY_CLOSE = "|>";
 
     public static boolean matches(String line, String shortForm, String longForm) {
-        return line.startsWith(shortForm) || line.startsWith(longForm);
+        return line.startsWith(shortForm + " ") || line.startsWith(longForm + " ");
     }
 
     public static String stripPrefix(String line, String shortForm, String longForm) {

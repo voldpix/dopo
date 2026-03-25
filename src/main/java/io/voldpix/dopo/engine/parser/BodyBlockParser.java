@@ -6,7 +6,7 @@ import io.voldpix.dopo.common.model.parser.ParseError;
 import java.util.Objects;
 import java.util.Optional;
 
-public class BodyParser {
+public class BodyBlockParser {
 
     public Optional<ParseError> parse(String body, RequestBlock.Builder builder) {
         if (Objects.isNull(body) || body.isBlank()) {

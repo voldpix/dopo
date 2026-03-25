@@ -13,7 +13,7 @@ public class ContentProcessor {
 
     final RequestExtractor requestExtractor = new RequestExtractor();
     final RequestLineParser requestLineParser = new RequestLineParser();
-    final BodyParser bodyParser = new BodyParser();
+    final BodyBlockParser bodyBlockParser = new BodyBlockParser();
 
     final List<ContentParser> parsers = List.of(
             new HeaderLineParser(),
@@ -56,7 +56,7 @@ public class ContentProcessor {
                     );
         }
 
-        bodyParser.parse(raw.body(), builder).ifPresent(errors::add);
+        bodyBlockParser.parse(raw.body(), builder).ifPresent(errors::add);
 
         return new ParseResult(
                 errors.isEmpty() ? builder.build() : null,

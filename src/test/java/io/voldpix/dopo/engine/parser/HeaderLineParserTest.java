@@ -75,7 +75,7 @@ class HeaderLineParserTest {
 
     @Test
     void errorForEmptyLine() {
-        var error = parser.parse("-h", builder);
+        var error = parser.parse("-h ", builder);
 
         assertThat(error).isPresent();
         assertThat(error.get().hint()).contains("expected: -h <key>=<value>");
