@@ -1,0 +1,12 @@
+# This is a test request
+POST https://api.example.com/users
+-h Content-Type=application/json
+-h Authorization=Bearer xyz123
+-q debug=true
+
+<|
+{
+  "username": "voldpix",
+  "role": "admin"
+}
+|>

@@ -1,22 +1,6 @@
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-.kotlin
-.mvn
+# https://dart.dev/guides/libraries/private-files
+# Created by `dart pub`
+.dart_tool/
 
-### IntelliJ IDEA ###
 .idea/
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-*.iws
-*.iml
-*.ipr
-
-### VS Code ###
-.vscode/
-
-### Mac OS ###
-.DS_Store
+/build

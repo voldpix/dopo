@@ -1,0 +1,1 @@
+dart build native executable: `dart compile exe bin/dopo.dart -o build/dopo`
