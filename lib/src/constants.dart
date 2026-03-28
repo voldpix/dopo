@@ -1,2 +1,5 @@
 const String appName = 'dopo';
-const String appVersion = '0.1-dev';
+const String appVersion = String.fromEnvironment(
+  'DOPO_VERSION',
+  defaultValue: 'dev',
+);

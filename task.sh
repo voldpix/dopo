@@ -17,6 +17,9 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
+VERSION=$(grep '^version:' pubspec.yaml | awk '{print $2}' | tr -d "''\"")
+info "Detected pubspec version: $VERSION"
+
 COMMAND=$1
 shift
 
@@ -24,13 +27,13 @@ case "$COMMAND" in
   build)
     info "Compiling native executable..."
     mkdir -p build
-    dart compile exe bin/dopo.dart -o build/dopo
+    dart compile exe -DDOPO_VERSION="$VERSION" bin/dopo.dart -o build/dopo
     success "Build complete! Executable is at ./build/dopo"
     ;;
 
   run)
     info "Running in JIT mode (dart run)..."
-    dart run bin/dopo.dart "$@"
+    dart run --define=DOPO_VERSION="$VERSION" bin/dopo.dart "$@"
     ;;
 
   format)
