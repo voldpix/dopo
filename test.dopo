@@ -1,8 +1,9 @@
 # This is a test request
-POST https://api.example.com/users
+GET https://webhook.site/fbbf8884-a942-4547-a2c6-79933f7ee3fc
 -h Content-Type=application/json
 -h Authorization=Bearer xyz123
 -q debug=true
+-q userId=1
 
 <|
 {

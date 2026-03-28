@@ -1,5 +1,4 @@
 import 'package:test/test.dart';
-import 'package:dopo/dopo.dart';
 import 'package:dopo/src/parser/block_extractor.dart';
 
 void main() {
@@ -22,7 +21,7 @@ void main() {
       final result = extractor.extract(content);
       expect(result.directives, [
         'POST https://api.example.com',
-        '-h Content-Type=json'
+        '-h Content-Type=json',
       ]);
       expect(result.body, '{ "name": "alice" }');
     });
@@ -38,7 +37,7 @@ void main() {
       final result = extractor.extract(content);
       expect(result.directives, [
         'POST https://api.example.com',
-        '-h Content-Type=json'
+        '-h Content-Type=json',
       ]);
       expect(result.body, isNull);
     });
@@ -50,9 +49,7 @@ void main() {
         { "name": "alice" }
       ''';
 
-      expect(() => extractor.extract(content),
-          throwsA(isA<ParseException>())
-      );
+      expect(() => extractor.extract(content), throwsA(isA<ParseException>()));
     });
   });
 }

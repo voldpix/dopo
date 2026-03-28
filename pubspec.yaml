@@ -1,13 +1,14 @@
 name: dopo
 description: A sample command-line application with basic argument parsing.
 version: 0.0.1
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/voldpix/dopo
 
 environment:
-    sdk: ^3.11.3
+    sdk: ^3.11.4
 
 dependencies:
     args: ^2.7.0
+    http: ^1.6.0
 
 dev_dependencies:
     lints: ^6.0.0

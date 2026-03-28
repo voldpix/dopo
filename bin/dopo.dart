@@ -50,7 +50,7 @@ void main(List<String> args) async {
   final req = result.request!;
 
   print('Parsed Successfully\n');
-  print('${req.method.name.toUpperCase()} ${req.url}');
+  print('Sending: ${req.method.name.toUpperCase()} ${req.url}');
 
   if (req.headers.isNotEmpty) {
     print('\nHeaders:');
@@ -64,5 +64,24 @@ void main(List<String> args) async {
 
   if (req.hasBody) {
     print('\nBody:\n${req.body}');
+  }
+
+  final runner = HttpRunner();
+  try {
+    final response = await runner.run(req);
+    final color = response.statusCode >= 200 && response.statusCode < 300
+        ? '\x1B[32m'
+        : '\x1B[31m';
+    print(
+      '$color${response.statusCode}\x1B[0m in ${response.duration.inMilliseconds}ms',
+    );
+
+    if (response.body.isNotEmpty) {
+      print('\n${response.body}');
+    }
+  } catch (e) {
+    print('Network Error: $e');
+  } finally {
+    runner.close();
   }
 }

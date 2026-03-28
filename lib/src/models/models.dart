@@ -61,3 +61,10 @@ extension ParseResultX on ParseResult {
   bool get hasErrors => errors.isNotEmpty;
   bool get isSuccess => errors.isEmpty && request != null;
 }
+
+typedef HttpResponse = ({
+  int statusCode,
+  Map<String, String> headers,
+  String body,
+  Duration duration,
+});
