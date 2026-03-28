@@ -28,6 +28,12 @@ case "$COMMAND" in
     info "Compiling native executable..."
     mkdir -p build
     dart compile exe -DDOPO_VERSION="$VERSION" bin/dopo.dart -o build/dopo
+
+    if command -v strip &> /dev/null; then
+        info "Stripping debug symbols to reduce size..."
+        strip build/dopo
+    fi
+
     success "Build complete! Executable is at ./build/dopo"
     ;;
 
