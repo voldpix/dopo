@@ -1,3 +1,5 @@
+import 'content_sanitizer.dart';
+
 class ParseException implements Exception {
   final String message;
 
@@ -10,17 +12,11 @@ class ParseException implements Exception {
 typedef RawBlock = ({List<String> directives, String? body});
 
 class BlockExtractor {
-  static const _commentPrefix = '#';
   static const _bodyOpen = '<|';
   static const _bodyClose = '|>';
 
   RawBlock extract(String rawContent) {
-    final lines = rawContent
-        .split("\n")
-        .map((l) => l.trim())
-        .where((l) => l.isNotEmpty && !l.startsWith(_commentPrefix))
-        .map((l) => l.replaceAll(RegExp(r'\s+'), ' '))
-        .toList();
+    final lines = ContentSanitizer.sanitizeToLines(rawContent);
 
     final openIdx = lines.indexOf(_bodyOpen);
     final closeIdx = lines.indexOf(_bodyClose);

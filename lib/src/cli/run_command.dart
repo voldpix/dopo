@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:args/command_runner.dart';
 import 'package:dopo/dopo.dart';
-import 'package:dopo/src/parser/template_engine.dart';
 import 'package:http/http.dart' as http;
 
 import 'console_formatter.dart';
@@ -51,21 +50,16 @@ class RunCommand extends Command<void> {
     }
 
     final rawContent = await file.readAsString();
+    final processor = ContentProcessor();
+    final result = processor.process(rawContent, Platform.environment);
 
-    String hydratedContent;
-    try {
-      hydratedContent = TemplateEngine.process(rawContent, Platform.environment);
-    } on TemplateException catch (e) {
-      ConsoleFormatter.error('Template Error: ${e.message}');
-      ConsoleFormatter.error('↳ Hint: Ensure the variable is defined in your environment.');
-      exit(1);
-    }
-
-    final parser = DslParser();
-    final result = parser.parse(hydratedContent);
-
-    if (result.hasErrors) {
-      ConsoleFormatter.parseErrors(file.uri.pathSegments.last, result.errors);
+    if (result.isError) {
+      if (result.errorMessage != null) {
+        ConsoleFormatter.error('${result.errorType} Error: ${result.errorMessage}');
+        ConsoleFormatter.error('↳ Hint: Ensure the variable is defined in your environment.');
+      } else {
+        ConsoleFormatter.parseErrors(file.uri.pathSegments.last, result.errors);
+      }
       exit(1);
     }
 

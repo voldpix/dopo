@@ -8,7 +8,7 @@ class TemplateException implements Exception {
 
 class TemplateEngine {
   static String process(String rawContent, Map<String, String> env) {
-    final regex = RegExp(r'\{\{s*([A-Za-z0-9_]+)\s*\}\}');
+    final regex = RegExp(r'\{\{\s*([A-Za-z0-9_]+)\s*\}\}');
 
     return rawContent.replaceAllMapped(regex, (match) {
       final variableName = match.group(1);
