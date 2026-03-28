@@ -6,7 +6,7 @@ import '../models/models.dart';
 class HttpRunner {
   final http.Client _client = UserAgentClient(http.Client());
 
-  Future<HttpResponse> run(RequestBlock request) async {
+  Future<HttpResponse> run(RequestBlock request, {Duration timeout = const Duration(seconds: 30)}) async {
     final uri = _buildUri(request);
     final headers = _buildHeaders(request);
 
@@ -14,29 +14,16 @@ class HttpRunner {
 
     http.Response response;
     try {
-      response = await switch (request.method) {
+      final requestFuture = switch (request.method) {
         HttpMethod.get => _client.get(uri, headers: headers),
-        HttpMethod.post => _client.post(
-          uri,
-          headers: headers,
-          body: request.body,
-        ),
-        HttpMethod.put => _client.put(
-          uri,
-          headers: headers,
-          body: request.body,
-        ),
-        HttpMethod.patch => _client.patch(
-          uri,
-          headers: headers,
-          body: request.body,
-        ),
-        HttpMethod.delete => _client.delete(
-          uri,
-          headers: headers,
-          body: request.body,
-        ),
+        HttpMethod.post => _client.post(uri, headers: headers, body: request.body),
+        HttpMethod.put => _client.put(uri, headers: headers, body: request.body),
+        HttpMethod.patch => _client.patch(uri, headers: headers, body: request.body),
+        HttpMethod.delete => _client.delete(uri, headers: headers, body: request.body),
       };
+
+      response = await requestFuture.timeout(timeout);
+
     } finally {
       stopwatch.stop();
     }
@@ -49,9 +36,7 @@ class HttpRunner {
     );
   }
 
-  void close() {
-    _client.close();
-  }
+  void close() => _client.close();
 
   Uri _buildUri(RequestBlock request) {
     final baseUri = Uri.parse(request.url);
