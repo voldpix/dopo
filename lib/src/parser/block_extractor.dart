@@ -4,9 +4,7 @@ class ParseException implements Exception {
   const ParseException(this.message);
 
   @override
-  String toString() {
-    return message;
-  }
+  String toString() => message;
 }
 
 typedef RawBlock = ({List<String> directives, String? body});

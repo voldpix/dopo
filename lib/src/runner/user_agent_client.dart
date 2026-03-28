@@ -6,7 +6,7 @@ class UserAgentClient extends http.BaseClient {
   final http.Client _inner;
   final String _userAgent;
 
-  UserAgentClient(this._inner) : _userAgent = '$appName/$appVersion';
+  UserAgentClient(this._inner) : _userAgent = '($appName)CLI/$appVersion';
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) {

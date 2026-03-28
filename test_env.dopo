@@ -1,0 +1,15 @@
+# This is a test request
+
+# MY_CUSTOM_AGENT="DopoCLI/1.0" TARGET_USER=2 MY_USERNAME="voldpix" ./task.sh run run --verbose test_env.dopo
+
+GET https://webhook.site/fbbf8884-a942-4547-a2c6-79933f7ee3fc
+-h Content-Type=application/json
+#-h User-Agent={{MY_CUSTOM_AGENT}}
+-q userId={{TARGET_USER}}
+
+<|
+{
+  "username": "{{MY_USERNAME}}",
+  "role": "admin"
+}
+|>
